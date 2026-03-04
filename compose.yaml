@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  parking-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: parking-monitor
+    restart: unless-stopped
+    
+    environment:
+      TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN}"
+      TELEGRAM_CHAT_ID: "${TELEGRAM_CHAT_ID}"
+      CHECK_INTERVAL: "60"
+      TZ: Europe/Moscow
+      LOG_LEVEL: INFO
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    volumes:
+      - ./data:/app/data
+    
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
